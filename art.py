@@ -81,13 +81,90 @@ class Deck(object):
         self.bleed = inch*bleed
         self.inset = inch*inset
         self.safety = inch*safety
+
+
         self.canvas = canvas.Canvas("figures/deck.pdf",
             pagesize=self.size, enforceColorSpace="CMYK")
         self.set()
 
+        self.front_pattern = self.make_front_pattern()
+
+    def make_full_deck_pdf(self, collated=False):
+
+        ctag = "_collated" if collated else ""
+        name = f"figures/deck{ctag}.pdf"
+        self.canvas = canvas.Canvas(name, pagesize=self.size,
+            enforceColorSpace="CMYK")
+
+        self.make_front()
         for suit in ["C", "D", "H", "S"]:
             for rank in np.roll(np.array(list(NSYMBOLS)),-1):
+                if collated and f"{suit}{rank}" != "C2": self.make_front()
                 self.make_face(rank, suit)
+
+    def make_front_pdf(self):
+
+        self.canvas = canvas.Canvas("figures/front.pdf",
+            pagesize=self.size, enforceColorSpace="CMYK") 
+        self.front_pattern = self.make_front_pattern()
+        self.make_front()
+
+    def make_front(self):
+        # Fix origin to the top left of the card
+        self.canvas.translate(0, self.size[1])
+
+        # Draw background
+        background = shapes.Rect(
+            -self.size[0], -self.size[1],
+            2*self.size[0], 2*self.size[1],
+            fillColor=self.base_color)
+        self.draw(background)
+
+        self.draw(self.front_pattern)
+        self.canvas.showPage()
+
+    def make_front_pattern(self):
+
+        bl = self.bleed
+
+        x, y = self.x, self.y
+        nx, ny = 7, 8
+        gw = x/nx
+        gh = y/ny
+        suits = "SHCD"
+        front_pattern = []
+        for xi in range(nx):
+            for yi in range(ny):
+                id = xi*nx + yi
+                xp = bl + gw/2 + xi*gw
+                yp = -bl -gh/2 - yi*gh
+                suit_text = suits[id%4] 
+
+                rolled = list(np.roll(list(NSYMBOLS), -1))
+                rank = np.random.choice(rolled)
+                number = rolled.index(rank)
+
+                if suit_text == "S": group = self.make_spade(t=number/12)
+                if suit_text == "H": group = self.make_heart(t=number/12)
+                if suit_text == "C":
+                    group = self.make_club()
+                    # Constant random turning
+                    for man in group.contents:
+                            if np.random.random() < 0.3:
+                                t = np.random.choice([-45, 45])
+                                man.rotate(t)
+                if suit_text == "D": group = self.make_diamond(random=True)
+
+
+                g = G(group)
+                sc = 0.3
+                g.scale(sc, sc)
+                g.translate(xp/sc, yp/sc)
+                front_pattern.append(g)
+            
+
+        return G(*front_pattern)
+        
 
     def make_face(self, rank, suit):
 
@@ -286,21 +363,24 @@ class Deck(object):
         )
 
         lep = lambda a, b: a*(1-t) + b*t
+        lep_d = lambda a, b: a * (1-t**2) + b*t**2
+        lep_s = lambda a, b: a * (1-(t+1e-12)**(1/2)) + b*(t+1e-12)**(1/2)
         an = lambda t_: np.array([np.cos(t_), np.sin(t_)])
         top = shapes.Path(**fill)
         left = shapes.Path(**fill)
         nin = 8
-        skw = np.array([0.5, 1.0])
-        shft = np.array([0., 4*r])
+        skw = np.array([.55, .15])
+        shft = np.array([0., 1.6*r])
         crc_in = lambda t_: list(a*.8*an(t_*2*np.pi/nin)*skw + shft)
         crc_out = lambda t_: list((a*an(t_*(2*np.pi/12) + np.pi/4))*skw + shft)
         def star(t_):
-            n = 100
+            n = 1.
+            div = 1/.5523
             vec = np.array([
-                [n, 0], [n/2, 1], [1, n/2],
-                [0, n], [-1, n/2], [-n/2, 1],
-                [-n, 0], [-n/2, -1], [-1, -n/2], [0, -n],
-                [1, -n/2], [n/2, -1],
+                [n, 0], [1, n/div], [n/div, 1],
+                [0, n], [-n/div, 1], [-1, n/div],
+                [-n, 0], [-1, -n/div], [-n/div, -1], [0, -n],
+                [n/div, -1], [1, -n/div],
             ])[t_]/n*8
             return skw*vec + shft
 
@@ -318,28 +398,28 @@ class Deck(object):
             "cl":(
                 lep(r*an(np.pi/2+np.pi/6)[0], star(9)[0]), lep(r*an(np.pi/2+np.pi/6)[1], star(9)[1]),
                 lep(-r, star(8)[0]), lep((2.7-H)*r, star(8)[1]),
-                lep(-3.7*r, star(7)[0]), lep((3.2-H)*r,star(7)[1]),
-                lep(-3.8*r, star(6)[0]), lep((3.4-H)*r,star(6)[1]),
+                lep_s(-3.7*r, star(7)[0]), lep((3.2-H)*r,star(7)[1]),
+                lep_s(-3.8*r, star(6)[0]), lep((3.4-H)*r,star(6)[1]),
             ),
             "tl":(
-                lep(-2.4*r,star(5)[0]), lep((5.5-H)*r,star(5)[1]),
+                lep_s(-2.4*r,star(5)[0]), lep((5.5-H)*r,star(5)[1]),
                 lep(-1*r,star(4)[0]), lep((4.7-H)*r,star(4)[1]),
-                lep(0*r,star(3)[0]), lep((3.4-H)*r,star(3)[1]),
+                lep_d(0*r,star(3)[0]), lep_d((3.4-H)*r,star(3)[1]),
             ),
             "tr":(
                 lep(1*r,star(2)[0]), lep((4.7-H)*r,star(2)[1]),
-                lep(2.4*r,star(1)[0]), lep((5.5-H)*r,star(1)[1]),
-                lep(3.8*r,star(0)[0]), lep((3.4-H)*r,star(0)[1]),
+                lep_s(2.4*r,star(1)[0]), lep((5.5-H)*r,star(1)[1]),
+                lep_s(3.8*r,star(0)[0]), lep((3.4-H)*r,star(0)[1]),
             ),
             "cr":(
-                lep(3.7*r,star(11)[0]), lep((3.2-H)*r,star(11)[1]),
+                lep_s(3.7*r,star(11)[0]), lep((3.2-H)*r,star(11)[1]),
                 lep(r,star(10)[0]), lep((2.7-H)*r,star(10)[1]),
                 lep(r*an(np.pi/2-np.pi/6)[0], star(9)[0]), lep(r*an(np.pi/2-np.pi/6)[1], star(9)[1]),
             ),
         }
         left_segs = {
             "cl":(
-                lep(r*an(np.pi/2+np.pi/6)[0], r*an(np.pi/2+np.pi/6)[0]), lep(r*an(np.pi/2+np.pi/6)[1], r*an(np.pi/2+np.pi/6)[1]),
+                lep(r*an(np.pi/2+np.pi/6)[0], r*an(np.pi/2+np.pi/3)[0]), lep(r*an(np.pi/2+np.pi/6)[1], r*an(np.pi/2+np.pi/3)[1]),
                 lep(-r, -r/2), lep((2.4-H)*r, (2.4-H)*r),
                 lep(-3.7*r, -2.1*r), lep((2.9-H)*r, (2.9-H)*r),
                 lep(-3.8*r, -2.4*r), lep((3.4-H)*r, (4.3-H)*r),

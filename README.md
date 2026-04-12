@@ -1,20 +1,28 @@
 # Silo Card Game
 
-- 4 nation-states, 10 decades, first to 100 points wins
-- Everyone can lose if player behavior becomes too aggressive
-- Playable with a standard deck + rules pdf
+A card game about nuclear deterrence, alliance, corruption, and betrayal.
+You play as the leader of a nation state granted power to make unthinkable
+decisions on behalf of your constituents. Will they be worth the win?
 
-Themes
+It is playable with a standard 52-card deck, but custom art
+is available
+
+- Four players, each starting with their own unique advantages.
+- Each player nation-states and their leaders (players)
+- Everyone can lose if player behavior becomes too aggressive
+
+## Themes
+- Nuclear Arms and 
 deterrence and game theory
 prisoner's dillemma
 uncertainty and risk
 
--> Play the cards, but let investments couple with each other aspect either positively or negatively
-
 ## Setup
 
-Choose one dealer to deal the entire deck (excluding Jokers) to each of the
+Choose one dealer to deal the entire deck (exclude Jokers) to each of the
 four players such that they each have 13 cards.
+
+Each player
 
 ## Rules (4 players)
 
