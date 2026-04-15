@@ -76,12 +76,16 @@ their tips turned inwards. These will be matched up with your adjacent opponents
 and their combination will determine effects directly between you and your
 neighbors like [Allyship](#allies-and-enemies) and [Declarations of War](#declaration-of-war).
 
+### Event Deck
+
+You may select a number of card to set aside in your Event Deck up to the year
+number being played. The rest of your cards shall be discarded
+
 ## Trade
 
 While choosing policies you are free to engage in Trade. You can trade with
 neighbors by exchanging a diamond for another card. It is up to you both
 to agree if the trade is worth it. You need not be truthful about what you are trading.
-
 
 ## Event Play
 
@@ -92,6 +96,9 @@ from their hand to the center. Each new card must be placed adjacent to one of
 the cards previously played. Each time a card of the same rank is placed adjacent to another,
 a [Major Event](#major-events) occurs instantly. 
 
+After all the cards are played, check for [explosions](#dropping-the-bomb).
+
+Then, do [Economic Resolution](#economic-resolution).
 
 ### Major Events
 
@@ -146,30 +153,33 @@ your loaded club.
 
 After Major Events and before Economic Resolution, Bombs will detonate.
 
-Starting with the highest ranked nuke,
+Starting with the highest ranked nuke, determine if there are other spades.
+follow the chain reaction.
 
 nukes with 3, 2, 1 rings have an explosion patterns like:
 
-Three ring explosion
-
+Three ring explosion (K)
+| | | | | |
+|:---:|:---:|:---:|:---:|:---:|
 | |x|x|x| |
 |x|x|x|x|x|
 |x|x|x|x|x|
 |x|x|x|x|x|
 | |x|x|x| |
 
-| | | | | |
-| |x|x|x| |
-| |x|x|x| |
-| |x|x|x| |
-| | | | | |
+Two ring explosion (Q)
+| | | |
+|:---:|:---:|:---:|
+|x|x|x|
+|x|x|x|
+|x|x|x|
 
-| | | | | |
-| | |x| | |
-| |x|x|x| |
-| | |x| | |
-| | | | | |
-
+One ring explosion (J)
+| | | |
+|:---:|:---:|:---:|
+| |x| |
+|x|x|x|
+| |x| |
 
 ### Complete and Total Destruction
 
@@ -189,6 +199,20 @@ level of each suit between them, up to and including the . Neighboring enemies m
 resources to their borders to resist an ongoing dispute. They are also automatically
 
 Opponents at War cannot become allies.
+
+## Victory Check
+
+If someone has obtained a level 4 Suit Progress in one of C, H, D, then they win.
+
+If someone has obtained a level 4 Suit Progress in Spades *AND* a level 3 Suit
+Progress in C, H, or D, they win.
+
+Tie break I, compare total Heart progress points)
+Tie break II, compare total Diamond progress points)
+Tie break III, compare total Club progress points)
+
+If after 5 years, no one has won,
+then determine the winner from the tie breakers above.
 
 ## General Rules
 
