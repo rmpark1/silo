@@ -162,8 +162,7 @@ follow the chain reaction.
 nukes with 3, 2, 1 rings have an explosion patterns like:
 
 Three ring explosion (K)
-| | | | | |
-|:---:|:---:|:---:|:---:|:---:|
+
 | |x|x|x| |
 |x|x|x|x|x|
 |x|x|x|x|x|
@@ -171,15 +170,13 @@ Three ring explosion (K)
 | |x|x|x| |
 
 Two ring explosion (Q)
-| | | |
-|:---:|:---:|:---:|
+
 |x|x|x|
 |x|x|x|
 |x|x|x|
 
 One ring explosion (J)
-| | | |
-|:---:|:---:|:---:|
+
 | |x| |
 |x|x|x|
 | |x| |
