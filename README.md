@@ -69,9 +69,28 @@ words words words words words words words words words words words words words wo
 
 ## Policy Selection
 
+The cards in your hand can be placed into one of four places:
+1. Your [Domestic Policy](#domestic-policy)
+2. Your [Foreign Policy](#foreign-policy)
+3. Your [Event Deck](#event-play)
+the event pile
+4. The central discard pile
+
 ### Domestic Policy
 
+There are four card slots in front of you that form your domestic policy—
+one for each suit. When you place high value cards in your domestic policy slots,
+that suit becomes endowed with [Special Abilities](#special-abilities) during
+event game play. Once a card is placed in its respective suit slot, 
+
 ### Foreign Policy
+
+There are two card slots, to be placed right and left of your domestic policy cards with
+their tips turned inwards. These will be matched up with your adjacent opponents
+and their combination will determine effects directly between you and your
+neighbors like [Allyship](#allies-and-enemies) and [Declarations of War](#declaration-of-war).
+
+Cards you place in your foreign policy slots allow
 
 ## Trade
 
@@ -81,6 +100,11 @@ Each player will play a card from their hand to the center.
 Each new card must be placed adjacent to one of the cards
 previously played. Cards in their hand that they take turns
 playing one at a time.
+
+## Special Abilities
+
+Spades: You can Drop the Bomb during event play with any card lower than your
+[Suit Progess](#domestic-policy) .
 
 
 ## General Rules
@@ -115,39 +139,21 @@ A(ce) Q(ueen) K(ing) J(ack)
 Major Events occur when two cards of the same rank are played next to
 each other during [Event Play](#event-play).
 
-S -> H: Declaration of War
-S -> D: Embargo
-S -> C: Regime Change
-
-H -> S: Abolitionist Movement (prevent nuclear progress)
-H -> D: Tried at the Hague (Global sanctions) | -D  |
-H -> C: Election Year
-
-D -> S: War Monger
-D -> H: Annexation (at War) Immigration (at Peace)
-D -> C: Corruption of public official (other)
-
-C -> S: Spy Ring
-C -> H: PSYOP
-C -> D: Corruption of public official (self)
-
-        1 | 2 | All | condition
-S -> H: -H +S | +S -D | | (only once, only against opponent)
-S -> D: -D -H | |
-S -> C: -C | |
-
-H -> S: -S | | |
-H -> D: -D | | |
-H -> C: | | +/-C | + if H > 10, - if H < 10 for all
-
-D -> S: +D +S | +S | |
-D -> H: +D | -H | | if 1 & 2 at War
-D -> H: +D | +C | | if 1 & 2 at Peace
-D -> C: +D -H | | |
-
-C -> S: Spy Ring
-C -> H: | 
-C -> D: | +D -H | | |
+| Combo             | Event                                            | Receiver Gets | Instigator Gets | Condition               |
+| :---:             | :---:                                            | :---:         | :---:           |                         |
+| S -> H            | Declaration of War                               | -H +S         | +S -D           | once per opponent       |
+| S -> D            | Embargo                                          | -D -H         |                 |                         |
+| S -> C            | Regime Change                                    | -C            |                 |                         |
+| H -> S            | Abolitionist Movement (prevent nuclear progress) | -S            |                 |                         |
+| H -> D            | Tried at the Hague (Global sanctions)            | -D            |                 |                         |
+| H -> C            | Election Year                                    | +/-C          | +/-C            | + if H > J, - if H <= J |
+| D -> S            | War Monger                                       | +D +S         | +S              |                         |
+| D -> H (at War)   | Annexation                                       | +D            | -H              | if 1 & 2 at War         |
+| D -> H (at Peace) | Immigration                                      | +D            | +C              | if 1 & 2 at Peace       |
+| D -> C            | Corruption of public official (other)            | +D -H         |                 |                         |
+| C -> S            | Spy Ring                                         | -C            | +C              |                         |
+| C -> H            | PSYOP                                            | -H            | +C              |                         |
+| C -> D            | Corruption of public official (self)             |               | +D -H           |                         |
 
 ## Complete and Total Destruction
 
