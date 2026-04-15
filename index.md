@@ -1,6 +1,5 @@
 # Silo Card Game
 
-A card game about nuclear deterrence, alliance, corruption, and betrayal.
 You play as the leader of a nation state granted the power to make unthinkable
 decisions on behalf of your constituents. Is it worth the win?
 
