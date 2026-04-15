@@ -35,37 +35,21 @@ and place it face up in front of them.
 - if they have any remaining cards with ranks 8, 9, 10, or Jack, place those
 forward face up in a seperate pile
 
-- Determine who has the highest Spade, they are now called the ``Spade``.
+- Determine who has the highest Spade, they are now called ``The Spade``.
 
 - Of the remaning unnamed players, determine who has the highest Heart,
-they are now called the ``Heart``.
+they are now called ``The Heart``.
 
-- Repeat to determine who is the  ``Diamond`` and who is the ``Club``.
+- Repeat to determine who is ``The Diamond`` and who is ``The Club``.
 
 - Return all cards to a central discard pile except for those with rank 8, 9, 10, or Jack.
 
-- The ``Spade`` shall recieve   ``JS``, ``TH``, ``9D``, and ``8C``.
-- The ``Heart`` shall recieve   ``JH``, ``TD``, ``9C``, and ``8S``.
-- The ``Diamond`` shall recieve ``JD``, ``TC``, ``9S``, and ``8H``.
-- The ``Club`` shall recieve    ``JC``, ``TS``, ``9H``, and ``8D``.
+- ``The Spade`` shall recieve   ``JS``, ``TH``, ``9D``, and ``8C``.
+- ``The Heart`` shall recieve   ``JH``, ``TD``, ``9C``, and ``8S``.
+- ``The Diamond`` shall recieve ``JD``, ``TC``, ``9S``, and ``8H``.
+- ``The Club`` shall recieve    ``JC``, ``TS``, ``9H``, and ``8D``.
 
 - Shuffle the discard pile and re-deal it evenly to the remaining players.
-
-- Test &#x1F0A3
-
-Test
-<span style="font-size: 2em;">&#x1F0A3;</span>
-
-Test in line <span style="font-size: 2em;">&#x1F0A3;</span> with many other words
-words words words words words words words words words words words words words words
-words words words words words words words words words words words words words words
-words words words words words words words words words words words words words words
-
-<span style="font-size: 2em;">&#x1F0A3;</span>
-&#9658;
-&#767;
-&#2400;
-&#1F0C1;
 
 ## Policy Selection
 
@@ -81,7 +65,11 @@ the event pile
 There are four card slots in front of you that form your domestic policy—
 one for each suit. When you place high value cards in your domestic policy slots,
 that suit becomes endowed with [Special Abilities](#special-abilities) during
-event game play. Once a card is placed in its respective suit slot, 
+Event Play. Once a card is placed in its respective suit slot, it let's
+your Suit Progress: the highest card you've placed in that slot throughtout the
+game. all players start with a Suit Progress of ``Jack`` in every suit. You may
+not place a card in your domestic policy that is higher than your Suit Progress
+for that suit unless you've captured it during [Event Play](#event-play).
 
 ### Foreign Policy
 
@@ -90,9 +78,12 @@ their tips turned inwards. These will be matched up with your adjacent opponents
 and their combination will determine effects directly between you and your
 neighbors like [Allyship](#allies-and-enemies) and [Declarations of War](#declaration-of-war).
 
-Cards you place in your foreign policy slots allow
-
 ## Trade
+
+While choosing policies you are free to engage in Trade. You can trade with
+neighbors by exchanging a diamond for another card. It is up to you both
+to agree if the trade is worth it. You need not be truthful about what you are trading.
+
 
 ## Event Play
 
@@ -104,7 +95,7 @@ playing one at a time.
 ## Special Abilities
 
 Spades: You can Drop the Bomb during event play with any card lower than your
-[Suit Progess](#domestic-policy) .
+Spade [Suit Progess](#domestic-policy).
 
 
 ## General Rules

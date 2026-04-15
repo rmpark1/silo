@@ -32,37 +32,21 @@ and place it face up in front of them.
 - if they have any remaining cards with ranks 8, 9, 10, or Jack, place those
 forward face up in a seperate pile
 
-- Determine who has the highest Spade, they are now called the ``Spade``.
+- Determine who has the highest Spade, they are now called ``The Spade``.
 
 - Of the remaning unnamed players, determine who has the highest Heart,
-they are now called the ``Heart``.
+they are now called ``The Heart``.
 
-- Repeat to determine who is the  ``Diamond`` and who is the ``Club``.
+- Repeat to determine who is ``The Diamond`` and who is ``The Club``.
 
 - Return all cards to a central discard pile except for those with rank 8, 9, 10, or Jack.
 
-- The ``Spade`` shall recieve   ``JS``, ``TH``, ``9D``, and ``8C``.
-- The ``Heart`` shall recieve   ``JH``, ``TD``, ``9C``, and ``8S``.
-- The ``Diamond`` shall recieve ``JD``, ``TC``, ``9S``, and ``8H``.
-- The ``Club`` shall recieve    ``JC``, ``TS``, ``9H``, and ``8D``.
+- ``The Spade`` shall recieve   ``JS``, ``TH``, ``9D``, and ``8C``.
+- ``The Heart`` shall recieve   ``JH``, ``TD``, ``9C``, and ``8S``.
+- ``The Diamond`` shall recieve ``JD``, ``TC``, ``9S``, and ``8H``.
+- ``The Club`` shall recieve    ``JC``, ``TS``, ``9H``, and ``8D``.
 
 - Shuffle the discard pile and re-deal it evenly to the remaining players.
-
-- Test &#x1F0A3
-
-Test
-<span style="font-size: 2em;">&#x1F0A3;</span>
-
-Test in line <span style="font-size: 2em;">&#x1F0A3;</span> with many other words
-words words words words words words words words words words words words words words
-words words words words words words words words words words words words words words
-words words words words words words words words words words words words words words
-
-<span style="font-size: 2em;">&#x1F0A3;</span>
-&#9658;
-&#767;
-&#2400;
-&#1F0C1;
 
 ## Policy Selection
 
@@ -78,7 +62,12 @@ the event pile
 There are four card slots in front of you that form your domestic policy—
 one for each suit. When you place high value cards in your domestic policy slots,
 that suit becomes endowed with [Special Abilities](#special-abilities) during
-event game play. Once a card is placed in its respective suit slot, 
+Event Play. Once a card is placed in its respective suit slot, it let's
+your Suit Progress: the highest card you've placed in that slot throughtout the
+game. all players start with a Suit Progress of ``Jack`` in every suit. You may
+not place a card in your domestic policy that is higher than your Suit Progress
+for that suit unless you've earned enough Suit Points during the previous [Event Play](#event-play)
+round.
 
 ### Foreign Policy
 
@@ -87,22 +76,119 @@ their tips turned inwards. These will be matched up with your adjacent opponents
 and their combination will determine effects directly between you and your
 neighbors like [Allyship](#allies-and-enemies) and [Declarations of War](#declaration-of-war).
 
-Cards you place in your foreign policy slots allow
-
 ## Trade
+
+While choosing policies you are free to engage in Trade. You can trade with
+neighbors by exchanging a diamond for another card. It is up to you both
+to agree if the trade is worth it. You need not be truthful about what you are trading.
+
 
 ## Event Play
 
-Each player will play a card from their hand to the center.
-Each new card must be placed adjacent to one of the cards
-previously played. Cards in their hand that they take turns
-playing one at a time.
+First, each neighboring player may inspect your foreign policy card, and you theirs.
 
-## Special Abilities
+Starting with ``The Spade`` and moving clockwise, each player will play a card
+from their hand to the center. Each new card must be placed adjacent to one of
+the cards previously played. Each time a card of the same rank is placed adjacent to another,
+a [Major Event](#major-events) occurs instantly. 
 
-Spades: You can Drop the Bomb during event play with any card lower than your
-[Suit Progess](#domestic-policy) .
 
+### Major Events
+
+The player who first played their card during event play is the ``Receiver`` and the player
+who places a card of the same rank adjacent to the ``Receiver``'s card is the ``Instigator``.
+A Major event ensures based on &rarr
+
+
+| Combo                | Event                                            | Receiver Gets | Instigator Gets | Condition               |
+| :---:                | :---:                                            | :---:         | :---:           |                         |
+| S &rarr H            | Declaration of War                               | -H +S         | +S -D           | once per opponent       |
+| S &rarr D            | Embargo                                          | -D -H         |                 |                         |
+| S &rarr C            | Regime Change                                    | -C            |                 |                         |
+| H &rarr S            | Abolitionist Movement (prevent nuclear progress) | -S            |                 |                         |
+| H &rarr D            | Tried at the Hague (Global sanctions)            | -D            |                 |                         |
+| H &rarr C            | Election Year                                    | +/-C          | +/-C            | + if H > J, - if H <= J |
+| D &rarr S            | War Monger                                       | +D +S         | +S              |                         |
+| D &rarr H (at War)   | Annexation                                       | +D            | -H              | if 1 & 2 at War         |
+| D &rarr H (at Peace) | Immigration                                      | +D            | +C              | if 1 & 2 at Peace       |
+| D &rarr C            | Corruption of public official (other)            | +D -H         |                 |                         |
+| C &rarr S            | Spy Ring                                         | -C            | +C              |                         |
+| C &rarr H            | PSYOP                                            | -H            | +C              |                         |
+| C &rarr D            | Corruption of public official (self)             |               | +D -H           |                         |
+
+Some events have additional effects:
+
+* Abolitionist Movement: The ``Receiver`` cannot upgrade their Spade progress next round.
+* Declaration of War: For the next 3 years, the ``Instigator`` and ``Receiver`` are at War. You cannot become allies.
+* Regime Change: You cannot form allies next year.
+* Election Year: The elections apply to everyone!
+* Spy Ring: The instigator may inspect up to two of the ``Receiver``'s domestic policy.
+
+### Special Abilities
+
+Special abilities are unlocked only when you have a card Loaded into your domestic policy slot for that suit.
+You may only have cards in this slot up to and including your [Suit Progess](#domestic-policy) for that suit.
+
+``The Nuke``: You can [Drop the Bomb](#dropping-the-bomb) during event play with any face card lower than your
+Loaded Spade.
+
+``Second Thoughts``: You can prevent any bomb from going off by have a heart which
+is both lower or equal to your Loaded Heart Suit Progress and higher or equal to the rank
+of the bomb.
+
+``Buy Out``: In lieu of trade, you can force an adjacent opponent to give you any card at or below
+your Diamond Suit Progress if they have it. Once per round.
+
+``Friends Again?``: You can break a declaration of war if you both play a face club lower than
+your loaded club.
+
+### Dropping the Bomb
+
+After Major Events and before Economic Resolution, Bombs will detonate.
+
+Starting with the highest ranked nuke,
+
+nukes with 3, 2, 1 rings have an explosion patterns like:
+
+Three ring explosion
+
+| |x|x|x| |
+|x|x|x|x|x|
+|x|x|x|x|x|
+|x|x|x|x|x|
+| |x|x|x| |
+
+| | | | | |
+| |x|x|x| |
+| |x|x|x| |
+| |x|x|x| |
+| | | | | |
+
+| | | | | |
+| | |x| | |
+| |x|x|x| |
+| | |x| | |
+| | | | | |
+
+
+### Complete and Total Destruction
+
+Count the number of hearts captured by Bombs this round. Shuffle the discard pile
+and draw the first card. If its rank is lower than the number of hearts captured time two,
+then, the game *ends* in Complete and Total Destruction.
+
+### Allies and Enemies
+
+You and your neighbor are deemed Allies if you both put forward a club.
+You can only become Allies with your direct neighbors. The ``Ally Strength``
+score between you is the average rank (rounded up) of the clubs allocated to your
+foreign policies.
+
+Allies share the [Special Ability](#special-abilities) benefits of the max
+level of each suit between them, up to and including the . Neighboring enemies must continuously supply
+resources to their borders to resist an ongoing dispute. They are also automatically
+
+Opponents at War cannot become allies.
 
 ## General Rules
 
@@ -111,67 +197,3 @@ Spades: You can Drop the Bomb during event play with any card lower than your
 Table talk is allowed! You can whisper to your adjacent neighbors,
 but *NOT* to the opponent sitting opposite you. You may not arbitrarily
 display your cards to opponents as a means to gain additional trust.
-
-<!--
-After each card is played in the event flow, check if a Major Event
-
-
-After Major event: take both cards into hand
-
-Each player
-
-Spade leads event play
-
-Nukes: for each card, collect all subsequent decreasing cards
-
-## Rules (4 players)
-
-### 1.0 The Global Order
-
-You have established 4 roles
-A(ce) Q(ueen) K(ing) J(ack)
-
-### 2.0 Major Events
-
-Major Events occur when two cards of the same rank are played next to
-each other during [Event Play](#event-play).
-
-| Combo             | Event                                            | Receiver Gets | Instigator Gets | Condition               |
-| :---:             | :---:                                            | :---:         | :---:           |                         |
-| S -> H            | Declaration of War                               | -H +S         | +S -D           | once per opponent       |
-| S -> D            | Embargo                                          | -D -H         |                 |                         |
-| S -> C            | Regime Change                                    | -C            |                 |                         |
-| H -> S            | Abolitionist Movement (prevent nuclear progress) | -S            |                 |                         |
-| H -> D            | Tried at the Hague (Global sanctions)            | -D            |                 |                         |
-| H -> C            | Election Year                                    | +/-C          | +/-C            | + if H > J, - if H <= J |
-| D -> S            | War Monger                                       | +D +S         | +S              |                         |
-| D -> H (at War)   | Annexation                                       | +D            | -H              | if 1 & 2 at War         |
-| D -> H (at Peace) | Immigration                                      | +D            | +C              | if 1 & 2 at Peace       |
-| D -> C            | Corruption of public official (other)            | +D -H         |                 |                         |
-| C -> S            | Spy Ring                                         | -C            | +C              |                         |
-| C -> H            | PSYOP                                            | -H            | +C              |                         |
-| C -> D            | Corruption of public official (self)             |               | +D -H           |                         |
-
-## Complete and Total Destruction
-
-### Allies and Enemies
-
-Allies share the benefits of the max level of each suit between them.
-Neighboring enemies must continuously supply resources to their borders to
-resist an ongoing dispute.
-
-### Economic resolution
-
-### Nuclear Progression
-
-### Activity Points
-spades which outrank their neighbors can gain a point against any suit 
-
-### Transparency
-True communication should be limited through certain channels
-
-### Undetermined flourishing in peace times
-It should be globally preferable but individually risky to cooperate and
-choose peace or deescalation.
-
--->
