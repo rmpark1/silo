@@ -12,6 +12,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.graphics.shapes import Group as G
 from reportlab.lib import colors
 from scipy.spatial import ConvexHull
+from svglib.svglib import svg2rlg
 
 from util import hex2cmyk
 from util import rgb2cmyk
@@ -107,13 +108,8 @@ class Deck(object):
         g = gap*inch
 
         # Build canvas
-        self.canvas = canvas.Canvas(path, pagesize=(3*px, 3*py),
+        self.canvas = canvas.Canvas(path, pagesize=(px, py),
             enforceColorSpace="CMYK")
-        # self.canvas.translate(px/2, py/2)
-        # self.draw(G(shapes.Rect(-1, -1000, 2, 2000)))
-        self.canvas.translate(px, py)
-        self.draw(G(shapes.Rect(0, 0, px, py, fillColor=RED)))
-        # self.draw(G(shapes.Rect(-1000, -1, 2000, 2)))
 
         # Determine best direction of layout (aligned or not)
         # px = 2*m - g + nx*(g + x)
@@ -124,7 +120,8 @@ class Deck(object):
         _, nx, ny, aligned = max((nxa*nya, nxa, nya, True),
                                  (nxu*nyu, nxu, nyu, False))
 
-        print(nx, ny)
+        npages = int(np.ceil(52 / (nx*ny)))
+
         # Now compute individual gaps from margin
         # p - 2m - n*x = (n-1)g
         tw, th = {True: (self.x, self.y), False: (self.y, self.x)}[aligned]
@@ -137,31 +134,92 @@ class Deck(object):
         card_faces = [self.make_face(rank, suit)
             for suit in ["C", "D", "H", "S"]
             for rank in np.roll(np.array(list(NSYMBOLS)),-1)]
-        page = 0
-        for isuit, suit in enumerate(["C", "D", "H", "S"]):
-            for jrank, rank in enumerate(np.roll(np.array(list(NSYMBOLS)),-1)):
-                # if isuit > 0 or jrank > 0: continue
-                id = isuit*len(NSYMBOLS) + jrank
-                rem = id % (nx*ny)
-                i = rem // ny
-                j = rem % ny
-                print(i, j, rem)
 
-                # Place on the page
-                x = m + i*(tw+gx) + tw/2
-                y = m + j*(th+gy) + th/2
-                # x, y = m + tw/2, m + th/2
-                # print(gx/self.x, m/self.x)
-                card_face = self.make_face(rank, suit)
-                card_face.translate(x,y)
-                # card_face.translate(self.size[0]/2, self.size[1]/2)
-                if not aligned: card_face.rotate(90)
-                self.draw(card_face)
+        # Fill in the remainders with QR codes
+        qr = self.make_QR()
+        fillin = 52 % (nx*ny)
+        card_faces += [G(qr) for _ in range(fillin)]
 
-                if rem == nx*ny - 1:
-                    self.canvas.showPage()
-                    self.canvas.translate(px, py)
-                    self.draw(G(shapes.Rect(0, 0, px, py, fillColor=RED)))
+        # Now add in title cards
+        # title = self.make_title_face()
+        title = self.make_front()
+        all_cards = []
+        for page in range(npages):
+
+            all_cards += card_faces[page*nx*ny:(page+1)*nx*ny]
+            all_cards += [G(title) for _ in range(nx*ny)]
+
+
+        style = dict(strokeWidth=0.2)
+
+        for id, card_face in enumerate(all_cards):
+            rem = id % (nx*ny)
+            i = rem // ny
+            j = rem % ny
+            # print(i, j, rem)
+
+            # Place on the page
+            x = m + i*(tw+gx) + tw/2
+            y = m + j*(th+gy) + th/2
+            # x, y = m + tw/2, m + th/2
+            # print(gx/self.x, m/self.x)
+            card_face.translate(x,y)
+            # card_face.translate(self.size[0]/2, self.size[1]/2)
+            if not aligned:
+                if rem < (nx*ny)//2: card_face.rotate(90)
+                else: card_face.rotate(-90)
+            self.draw(card_face)
+
+            if rem == nx*ny - 1:
+
+                guides = []
+                for ig in range(nx+1):
+                    xg = m + ig*(tw+gx)
+                    guides.append(shapes.Line(xg, 0, xg, py, **style))
+                    if ig > 0:
+                        guides.append(shapes.Line(xg-gx, 0, xg-gx, py, **style))
+                for ig in range(ny+1):
+                    yg = m + ig*(th+gy)
+                    guides.append(shapes.Line(0, yg, px, yg, **style))
+                    if ig > 0:
+                        guides.append(shapes.Line(0, yg-gy, px, yg-gy, **style))
+                self.draw(G(*guides))
+                self.canvas.showPage()
+                # self.canvas.translate(px, py)
+                # self.draw(G(shapes.Rect(0, 0, px, py, fillColor=RED)))
+
+    def make_title_face(self):
+
+        background = self.make_background()
+        
+        # # Make little card
+        # card = G(
+        #     shapes.Rect()
+        # )
+        # TODO
+
+        return background
+
+    def make_QR(self, path="icons/rules_qr_code.svg"):
+        drawing = svg2rlg(path)
+        squares = drawing.contents[0].contents[1]
+        squares.scale(0.4,0.4)
+        squares.translate(-264/2, -264/2)
+        background = self.make_background()
+        text = shapes.String(-41, 50, "RULES",
+            fontName="cards", fontSize=14)
+        bottom = G(text)
+        bottom.rotate(180)
+        text = G(text, bottom)
+
+        frame = G(
+            shapes.Rect(-self.x/2*.9, -self.y/2*.9, self.x*.9, self.y*.9, fillOpacity=0., strokeWidth=.1),
+            shapes.Rect(-self.x/2*.8, -self.y/2*.8, self.x*.8, self.y*.8, fillOpacity=0., strokeWidth=.1),
+            shapes.Rect(-self.x/2*.7, -self.y/2*.7, self.x*.7, self.y*.7, fillOpacity=0., strokeWidth=.1),
+            shapes.Rect(-self.x/2*.6, -self.y/2*.6, self.x*.6, self.y*.6, fillOpacity=0., strokeWidth=.1),
+        )
+        # squares.translate(self.x/2, self.y/2)
+        return G(background, text, frame, squares)
 
     def make_full_deck_pdf(self, collated=False):
 
@@ -192,16 +250,11 @@ class Deck(object):
         self.draw(front)
         self.canvas.showPage()
 
-    def make_background(self):
-        # b = self.bleed
-        # return shapes.Rect(
-        #     -self.x/2 - b, -self.y/2 - b,
-        #     self.x + 2*b, self.y + 2*b,
-        #     fillColor=self.base_color, strokeWidth=.1)
-        b = 0
+    def make_background(self, bleed=0.080*inch):
+        if bleed is None: bleed = self.bleed
         return shapes.Rect(
-            -self.x/2 - b, -self.y/2 - b,
-            self.x + 2*b, self.y + 2*b,
+            -self.x/2 - bleed, -self.y/2 - bleed,
+            self.x + 2*bleed, self.y + 2*bleed,
             fillColor=self.base_color, strokeWidth=.1)
 
     def make_front(self):
@@ -373,7 +426,7 @@ class Deck(object):
         topright.translate(2*x)
         top = G(topright, corner)
         bottom = G(top)
-        bottom.scale(1, -1)
+        bottom.scale(-1, -1)
 
         corners = G(bottom, top)
         return corners
@@ -466,9 +519,6 @@ class Deck(object):
             elif t==0: return a*an(0)*skw + shft
             elif t==6: return a*an(np.pi)*skw + shft
             return a*an(-np.pi/2)*skw + shft
-
-        # for t__ in range(0, 12):
-        #     print(t__, crc_rnd(t__))
 
         H=0.45
         top_segs = {
@@ -656,6 +706,15 @@ class Deck(object):
         print(f"Writing to {path}")
         self.canvas.save()
         os.system(f"open {path}")
+
+    def draw_large_canvas(self, s):
+        """Test shapes drawing on large canvas."""
+        px, py = (8.5*inch, 11*inch)
+        self.canvas = canvas.Canvas("figures/large_canvas.pdf",
+            pagesize=(3*px, 3*py), enforceColorSpace="CMYK")
+        self.canvas.translate(px, py)
+        self.draw(G(shapes.Rect(0, 0, px, py, fillColor=RED)))
+        self.draw(s)
 
 def diamond_verticies():
 
@@ -1048,10 +1107,6 @@ def diamond_2D(random=False, base_color=TAN):
     projected = project_points(crystal_points, azimuth_deg=0, elevation_deg=0, distance=10)
     base_crystal_color = RED
 
-    # for i, (u, v, d) in enumerate(results):
-    #     if u is not None:
-    #         print(f"Point {i}: 2D Position = ({u:.2f}, {v:.2f}), Distance = {d:.2f}")
-
     visible_facets_data = get_visible_front_faces(crystal_points, projected, facets, camera_pos)
 
     shaded_data = calculate_face_shading(crystal_points, visible_facets_data, base_crystal_color, light_pos)
@@ -1099,7 +1154,6 @@ def generate_shape_group(heart, angel, t=0, scale=100, fill_color=RED, stroke_co
             for hb, ab in zip(hbt, abt):
                 coords.append(lep(hb[0],ab[0]) * scale)
                 coords.append(lep(hb[1],ab[1]) * scale)
-                print(coords) 
             lp.curveTo(*coords)
             
         lp.closePath()

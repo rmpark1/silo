@@ -1,63 +1,39 @@
-# Silo Card Game
-
-A card game about nuclear deterrence, alliance, corruption, and betrayal.
 You play as the leader of a nation state granted the power to make unthinkable
 decisions on behalf of your constituents. Is it worth the win?
 
 It is playable with a standard 52-card deck, but custom art
-is available.
+is available
 
 - Four players, each starting with their own unique advantages.
-- Each player represents the leader of a nation-state
+- Each player nation-states and their leaders (players)
 - Everyone can lose if player behavior becomes too aggressive
 
 ## Sequence of play
 
 1. [Role Determination](#role-determination)
 2. Year 1
-    - 3.1 [Policy Selection](#policy-selection)
-    - 3.2 [Trade](#trade)
-    - 3.3 [Event Play](#event-play)
-    - 3.4 [Resolution](#resolution)
-    - 3.5 [Victory Check](#victory-check)
+    3.1 [Policy Selection](#policy-selection)
+    3.2 [Trade](#trade)
+    3.3 [Event Play](#event-play)
+    3.4 [Resolution](#resolution)
+    3.5 [Victory Check](#victory-check)
 3. Repeat for 5 years or until a player achieves [Victory](#victory-check)
 or until [Complete and Total Destruction](#complete-and-total-destruction)
 
+## General Rules
+
+## Table Talk
+
+Table talk is allowed! You can whisper to your adjacent neighbors,
+but *NOT* to the opponent sitting opposite you. You may not arbitrarily
+display your cards to opponents as a means to gain additional trust.
 
 ## Role Determination
 
-- Choose one dealer to deal the entire deck (exclude Jokers) to each player.
-Everyone should have 13 cards.
-
-- Each player shall find the highest rank card (Aces are high) in each suit
-and place it face up in front of them.
-
-- if they have any remaining cards with ranks 8, 9, 10, or Jack, place those
-forward face up in a seperate pile
-
-- Determine who has the highest Spade, they are now called the ``Spade``.
-
-- Of the remaning unnamed players, determine who has the highest Heart,
-they are now called the ``Heart``.
-
-- Repeat to determine who is the  ``Diamond`` and who is the ``Club``.
-
-- Return all cards to a central discard pile except for those with rank 8, 9, 10, or Jack.
-
-- The ``Spade`` shall recieve   ``JS``, ``TH``, ``9D``, and ``8C``.
-- The ``Heart`` shall recieve   ``JH``, ``TD``, ``9C``, and ``8S``.
-- The ``Diamond`` shall recieve ``JD``, ``TC``, ``9S``, and ``8H``.
-- The ``Club`` shall recieve    ``JC``, ``TS``, ``9H``, and ``8D``.
-
-- Shuffle the discard pile and re-deal it evenly to the remaining players.
-
-- Test &#x1F0A3
+Choose one dealer to deal the entire deck (exclude Jokers) to each of the
+four players such that they each have 13 cards.
 
 ## Policy Selection
-
-### Domestic Policy
-
-### Foreign Policy
 
 ## Trade
 
@@ -67,15 +43,6 @@ Each player will play a card from their hand to the center.
 Each new card must be placed adjacent to one of the cards
 previously played. Cards in their hand that they take turns
 playing one at a time.
-
-
-## General Rules
-
-### Table Talk
-
-Table talk is allowed! You can whisper to your adjacent neighbors,
-but *NOT* to the opponent sitting opposite you. You may not arbitrarily
-display your cards to opponents as a means to gain additional trust.
 
 <!--
 After each card is played in the event flow, check if a Major Event
