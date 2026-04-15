@@ -50,7 +50,15 @@ they are now called the ``Heart``.
 
 - Test &#x1F0A3
 
-&#x1F0A3;
+Test
+<span style="font-size: 2em;">&#x1F0A3;</span>
+
+Test in line <span style="font-size: 2em;">&#x1F0A3;</span> with many other words
+words words words words words words words words words words words words words words
+words words words words words words words words words words words words words words
+words words words words words words words words words words words words words words
+
+<span style="font-size: 2em;">&#x1F0A3;</span>
 &#9658;
 &#767;
 &#2400;
