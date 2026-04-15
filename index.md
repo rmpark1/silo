@@ -13,7 +13,7 @@ is available
 
 ## Sequence of play
 
-1. [Role Determination](#role-determination)
+1. [Role Determination](#2.0-role-determination)
 2. Year 1
     3.1 [Policy Selection](#policy-selection)
     3.2 [Trade](#trade)
