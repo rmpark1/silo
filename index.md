@@ -12,11 +12,11 @@ is available.
 
 1. [Role Determination](#role-determination)
 2. Year 1
-    1. [Policy Selection](#policy-selection)
-    2. [Trade](#trade)
-    3. [Event Play](#event-play)
-    4. [Resolution](#resolution)
-    5. [Victory Check](#victory-check)
+    - 3.1 [Policy Selection](#policy-selection)
+    - 3.2 [Trade](#trade)
+    - 3.3 [Event Play](#event-play)
+    - 3.4 [Resolution](#resolution)
+    - 3.5 [Victory Check](#victory-check)
 3. Repeat for 5 years or until a player achieves [Victory](#victory-check)
 or until [Complete and Total Destruction](#complete-and-total-destruction)
 
@@ -49,6 +49,12 @@ they are now called the ``Heart``.
 - Shuffle the discard pile and re-deal it evenly to the remaining players.
 
 - Test &#x1F0A3
+
+&#x1F0A3;
+&#9658;
+&#767;
+&#2400;
+&#1F0C1;
 
 ## Policy Selection
 

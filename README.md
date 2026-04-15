@@ -53,6 +53,12 @@ they are now called the ``Heart``.
 
 - Test &#x1F0A3
 
+&#x1F0A3;
+&#9658;
+&#767;
+&#2400;
+&#1F0C1;
+
 ## Policy Selection
 
 ### Domestic Policy
