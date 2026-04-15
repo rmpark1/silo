@@ -76,9 +76,8 @@ class Silo(object):
         self.determine_roles()
         self.stage = "policy"
 
-        for year in range(1, len(p.years)+1):
-            print(year)
-            self.select_policy()
+        # for year in range(1, p.years+1):
+        #     self.select_policy()
 
     def select_policy():
         pass

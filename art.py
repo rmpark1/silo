@@ -14,12 +14,15 @@ from reportlab.lib import colors
 from scipy.spatial import ConvexHull
 
 from util import hex2cmyk
+from util import rgb2cmyk
 
 
 INCH_TO_FONTSIZE = 295/3.5
 cmap = lambda hex: colors.CMYKColor(*hex2cmyk(hex))
+rmap = lambda r, g, b: colors.CMYKColor(*rgb2cmyk(r, g, b))
 TAN = cmap("#FBFBEF")
 WHITE = cmap("#FFFFFF")
+PPTX = rmap(235, 237, 235)
 RED=cmap("#CA1551") # Rosewood
 MUTED=cmap("#25283D") # Space Indigo
 
@@ -47,7 +50,6 @@ SPOTS = [
 settings = {
     "lw": 1,
 }
-
 
 class Deck(object):
 
@@ -82,12 +84,84 @@ class Deck(object):
         self.inset = inch*inset
         self.safety = inch*safety
 
-
         self.canvas = canvas.Canvas("figures/deck.pdf",
             pagesize=self.size, enforceColorSpace="CMYK")
         self.set()
 
         self.front_pattern = self.make_front_pattern()
+        self.rule_table_pattern = self.make_rule_table_pattern()
+
+    def make_print_layout(self, page_size=(8.5,11), margin=0.25, gap=0.125,
+                          path="figures/print_out.pdf"):
+        """Lay decks out onto pages. Save pages pdf.
+        
+        Args:
+            page_size (tuple[float, float]): The (width, height) of the page
+            in inches.
+            margin (float): The width of the margin for each side in inches.
+            gap (float): The gap between each card (including bleed) in inches.
+        """
+        # Find the maximum number of cards that will fit in each direction
+        px, py = page_size[0]*inch, page_size[1]*inch
+        m = margin*inch
+        g = gap*inch
+
+        # Build canvas
+        self.canvas = canvas.Canvas(path, pagesize=(3*px, 3*py),
+            enforceColorSpace="CMYK")
+        # self.canvas.translate(px/2, py/2)
+        # self.draw(G(shapes.Rect(-1, -1000, 2, 2000)))
+        self.canvas.translate(px, py)
+        self.draw(G(shapes.Rect(0, 0, px, py, fillColor=RED)))
+        # self.draw(G(shapes.Rect(-1000, -1, 2000, 2)))
+
+        # Determine best direction of layout (aligned or not)
+        # px = 2*m - g + nx*(g + x)
+        nxa = int(np.floor((px - 2*m + g)/(g+self.x)))
+        nya = int(np.floor((py - 2*m + g)/(g+self.y)))
+        nxu = int(np.floor((px - 2*m + g)/(g+self.y)))
+        nyu = int(np.floor((py - 2*m + g)/(g+self.x)))
+        _, nx, ny, aligned = max((nxa*nya, nxa, nya, True),
+                                 (nxu*nyu, nxu, nyu, False))
+
+        print(nx, ny)
+        # Now compute individual gaps from margin
+        # p - 2m - n*x = (n-1)g
+        tw, th = {True: (self.x, self.y), False: (self.y, self.x)}[aligned]
+        gx = (px - 2*m - nx*tw)/(nx-1)
+        gy = (py - 2*m - ny*th)/(ny-1)
+
+        # Determine position of each card
+        # xi = -px/2 + m (i+0.5)*(x+g)
+        # yj = py/2 - m - (j+0.5)*(y+g)
+        card_faces = [self.make_face(rank, suit)
+            for suit in ["C", "D", "H", "S"]
+            for rank in np.roll(np.array(list(NSYMBOLS)),-1)]
+        page = 0
+        for isuit, suit in enumerate(["C", "D", "H", "S"]):
+            for jrank, rank in enumerate(np.roll(np.array(list(NSYMBOLS)),-1)):
+                # if isuit > 0 or jrank > 0: continue
+                id = isuit*len(NSYMBOLS) + jrank
+                rem = id % (nx*ny)
+                i = rem // ny
+                j = rem % ny
+                print(i, j, rem)
+
+                # Place on the page
+                x = m + i*(tw+gx) + tw/2
+                y = m + j*(th+gy) + th/2
+                # x, y = m + tw/2, m + th/2
+                # print(gx/self.x, m/self.x)
+                card_face = self.make_face(rank, suit)
+                card_face.translate(x,y)
+                # card_face.translate(self.size[0]/2, self.size[1]/2)
+                if not aligned: card_face.rotate(90)
+                self.draw(card_face)
+
+                if rem == nx*ny - 1:
+                    self.canvas.showPage()
+                    self.canvas.translate(px, py)
+                    self.draw(G(shapes.Rect(0, 0, px, py, fillColor=RED)))
 
     def make_full_deck_pdf(self, collated=False):
 
@@ -96,48 +170,62 @@ class Deck(object):
         self.canvas = canvas.Canvas(name, pagesize=self.size,
             enforceColorSpace="CMYK")
 
-        self.make_front()
+        # Fix origin to the center of the card
+        self.canvas.translate(self.size[0]/2, self.size[1]/2)
+
+        front = self.make_front()
+        self.draw(front)
         for suit in ["C", "D", "H", "S"]:
             for rank in np.roll(np.array(list(NSYMBOLS)),-1):
                 if collated and f"{suit}{rank}" != "C2": self.make_front()
-                self.make_face(rank, suit)
+                face = self.make_face(rank, suit)
+                self.canvas.showPage()
+                self.canvas.translate(self.size[0]/2, self.size[1]/2)
+                self.draw(face)
 
-    def make_front_pdf(self):
+    def make_front_pdf(self, path="figures/front.pdf"):
 
-        self.canvas = canvas.Canvas("figures/front.pdf",
+        self.canvas = canvas.Canvas(path,
             pagesize=self.size, enforceColorSpace="CMYK") 
         self.front_pattern = self.make_front_pattern()
-        self.make_front()
+        front = self.make_front()
+        self.draw(front)
+        self.canvas.showPage()
+
+    def make_background(self):
+        # b = self.bleed
+        # return shapes.Rect(
+        #     -self.x/2 - b, -self.y/2 - b,
+        #     self.x + 2*b, self.y + 2*b,
+        #     fillColor=self.base_color, strokeWidth=.1)
+        b = 0
+        return shapes.Rect(
+            -self.x/2 - b, -self.y/2 - b,
+            self.x + 2*b, self.y + 2*b,
+            fillColor=self.base_color, strokeWidth=.1)
 
     def make_front(self):
-        # Fix origin to the top left of the card
-        self.canvas.translate(0, self.size[1])
+        return G(self.make_background(), self.front_pattern)
 
-        # Draw background
-        background = shapes.Rect(
-            -self.size[0], -self.size[1],
-            2*self.size[0], 2*self.size[1],
-            fillColor=self.base_color)
-        self.draw(background)
-
-        self.draw(self.front_pattern)
-        self.canvas.showPage()
+    def make_rule_table_pattern(self):
+        # TODO: implement rule table
+        return self.front_pattern
 
     def make_front_pattern(self):
 
-        bl = self.bleed
+        s = self.safety
 
         x, y = self.x, self.y
         nx, ny = 7, 8
-        gw = x/nx
-        gh = y/ny
+        gw = (x-2*s)/nx
+        gh = (y-2*s)/ny
         suits = "SHCD"
         front_pattern = []
         for xi in range(nx):
             for yi in range(ny):
                 id = xi*nx + yi
-                xp = bl + gw/2 + xi*gw
-                yp = -bl -gh/2 - yi*gh
+                xp = -x/2 + s + gw/2 + xi*gw
+                yp = y/2 - s - gh/2 - yi*gh
                 suit_text = suits[id%4] 
 
                 rolled = list(np.roll(list(NSYMBOLS), -1))
@@ -155,34 +243,24 @@ class Deck(object):
                                 man.rotate(t)
                 if suit_text == "D": group = self.make_diamond(random=True)
 
-
                 g = G(group)
                 sc = 0.3
                 g.scale(sc, sc)
                 g.translate(xp/sc, yp/sc)
                 front_pattern.append(g)
-            
 
         return G(*front_pattern)
         
-
     def make_face(self, rank, suit):
 
-        # Fix origin to the center of the card
-        self.canvas.translate(self.size[0]/2, self.size[1]/2)
-
         # Draw background
-        background = shapes.Rect(
-            -self.size[0], -self.size[1],
-            2*self.size[0], 2*self.size[1],
-            fillColor=self.base_color)
-        self.draw(background)
+        background = self.make_background()
 
-        self.draw_frames(dev=self.development)
+        corners = G()
 
         if suit == "C":
             club_draw = self.make_club()
-            self.place_corners(rank, club_draw, suit)
+            corners = self.make_corners(rank, club_draw, suit)
             center, rings = self.arrange_center(rank, club_draw, suit)
             # Random turning
             n = NSYMBOLS.index(rank)
@@ -195,31 +273,30 @@ class Deck(object):
 
         elif suit == "D":
             diamond = self.make_diamond()
-            self.place_corners(rank, diamond, suit)
+            corners = self.make_corners(rank, diamond, suit)
             n = NSYMBOLS.index(rank)
             random = (n > 1) and (n < 10)
             diamond = self.make_diamond(random=random)
-            center, rings = self.arrange_center(rank, diamond, suit, flip_allowed=False)
+            center, rings = self.arrange_center(rank, diamond, suit,
+                flip_allowed=False)
 
         elif suit == "H":
             rolled = list(np.roll(list(NSYMBOLS), -1))
             number = rolled.index(rank)
             heart = self.make_heart(t=number/12)
             heart.scale(1.2, 1.2)
-            self.place_corners(rank, heart, suit)
+            corners = self.make_corners(rank, heart, suit)
             center, rings = self.arrange_center(rank, heart, suit)
 
         elif suit == "S":
             rolled = list(np.roll(list(NSYMBOLS), -1))
             number = rolled.index(rank)
             spade = self.make_spade(t=number/12)
-            self.place_corners(rank, spade, suit)
+            corners = self.make_corners(rank, spade, suit)
             center, rings = self.arrange_center(rank, spade, suit)
 
-        self.draw(rings)
-        self.draw(center)
-
-        self.canvas.showPage()
+        card_face = G(background, corners, rings, center)
+        return card_face
 
     def arrange_center(self, rank, suit, suit_text, flip_allowed=True):
 
@@ -267,7 +344,7 @@ class Deck(object):
 
         return G(*symbols), G(*rings)
 
-    def place_corners(self, string, suit, suit_text):
+    def make_corners(self, string, suit, suit_text):
 
         font = "cards"
         shift=0
@@ -298,8 +375,8 @@ class Deck(object):
         bottom = G(top)
         bottom.scale(1, -1)
 
-        all = G(bottom, top)
-        self.draw(all)
+        corners = G(bottom, top)
+        return corners
 
     def set(self, **d):
         s = copy.deepcopy(settings)
@@ -341,7 +418,7 @@ class Deck(object):
 
     def make_diamond(self, random=False):
 
-        path = diamond_2D(random=random)
+        path = diamond_2D(random=random, base_color=self.base_color)
         g = G(path)
         g.scale(0.2, 0.2)
         return g
@@ -574,10 +651,11 @@ class Deck(object):
         # return G(*([arms]+cards))
         return G(*([arms, man]+cards))
 
-    def show(self):
-        print(f"Writing to {self.path}")
+    def show(self, path=None):
+        if path is None: path = self.path
+        print(f"Writing to {path}")
         self.canvas.save()
-        os.system(f"open {self.path}")
+        os.system(f"open {path}")
 
 def diamond_verticies():
 
@@ -929,7 +1007,7 @@ def calculate_face_shading(points_3d, visible_facets, base_color, light_source_p
     
     return shaded_faces_data
 
-def draw_shaded_crystal(shaded_faces_data):
+def draw_shaded_crystal(shaded_faces_data, base_color=TAN):
     """
     Draws the crystal using pre-calculated shaded colors for each face.
     """
@@ -946,7 +1024,7 @@ def draw_shaded_crystal(shaded_faces_data):
         poly = shapes.Polygon(
             flattened,
             # Use a slightly darker stroke than the fill for definition, or None
-            strokeColor=TAN, 
+            strokeColor=base_color, 
             strokeWidth=.01,
             # strokeOpacity=0.0,
             fillColor=fill_color
@@ -956,7 +1034,7 @@ def draw_shaded_crystal(shaded_faces_data):
     
     return G(*group[::-1])
 
-def diamond_2D(random=False):
+def diamond_2D(random=False, base_color=TAN):
 
     # crystal_points = diamond_verticies()
     crystal_points = generate_dynamic_crystal()
@@ -978,7 +1056,7 @@ def diamond_2D(random=False):
 
     shaded_data = calculate_face_shading(crystal_points, visible_facets_data, base_crystal_color, light_pos)
 
-    group = draw_shaded_crystal(shaded_data)
+    group = draw_shaded_crystal(shaded_data, base_color=base_color)
     return group
 
 
