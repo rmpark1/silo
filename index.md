@@ -104,24 +104,24 @@ Then, do [Economic Resolution](#economic-resolution).
 
 The player who first played their card during event play is the ``Receiver`` and the player
 who places a card of the same rank adjacent to the ``Receiver``'s card is the ``Instigator``.
-A Major event ensures based on &rarr
+A Major event ensures based on &rarr;
 
 
 | Combo                | Event                                            | Receiver Gets | Instigator Gets | Condition               |
 | :---:                | :---:                                            | :---:         | :---:           |                         |
-| S &rarr H            | Declaration of War                               | -H +S         | +S -D           | once per opponent       |
-| S &rarr D            | Embargo                                          | -D -H         |                 |                         |
-| S &rarr C            | Regime Change                                    | -C            |                 |                         |
-| H &rarr S            | Abolitionist Movement (prevent nuclear progress) | -S            |                 |                         |
-| H &rarr D            | Tried at the Hague (Global sanctions)            | -D            |                 |                         |
-| H &rarr C            | Election Year                                    | +/-C          | +/-C            | + if H > J, - if H <= J |
-| D &rarr S            | War Monger                                       | +D +S         | +S              |                         |
-| D &rarr H (at War)   | Annexation                                       | +D            | -H              | if 1 & 2 at War         |
-| D &rarr H (at Peace) | Immigration                                      | +D            | +C              | if 1 & 2 at Peace       |
-| D &rarr C            | Corruption of public official (other)            | +D -H         |                 |                         |
-| C &rarr S            | Spy Ring                                         | -C            | +C              |                         |
-| C &rarr H            | PSYOP                                            | -H            | +C              |                         |
-| C &rarr D            | Corruption of public official (self)             |               | +D -H           |                         |
+| S &rarr; H            | Declaration of War                               | -H +S         | +S -D           | once per opponent       |
+| S &rarr; D            | Embargo                                          | -D -H         |                 |                         |
+| S &rarr; C            | Regime Change                                    | -C            |                 |                         |
+| H &rarr; S            | Abolitionist Movement (prevent nuclear progress) | -S            |                 |                         |
+| H &rarr; D            | Tried at the Hague (Global sanctions)            | -D            |                 |                         |
+| H &rarr; C            | Election Year                                    | +/-C          | +/-C            | + if H > J, - if H <= J |
+| D &rarr; S            | War Monger                                       | +D +S         | +S              |                         |
+| D &rarr; H (at War)   | Annexation                                       | +D            | -H              | if 1 & 2 at War         |
+| D &rarr; H (at Peace) | Immigration                                      | +D            | +C              | if 1 & 2 at Peace       |
+| D &rarr; C            | Corruption of public official (other)            | +D -H         |                 |                         |
+| C &rarr; S            | Spy Ring                                         | -C            | +C              |                         |
+| C &rarr; H            | PSYOP                                            | -H            | +C              |                         |
+| C &rarr; D            | Corruption of public official (self)             |               | +D -H           |                         |
 
 Some events have additional effects:
 
